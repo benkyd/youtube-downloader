@@ -28,7 +28,7 @@ videos.forEach((url) => {
                     console.log(`An error occured while downloaing '${title}' retrying`)
                     try {
                         let stream = ytdl(url, {quality: 'highest'}).pipe(fs.createWriteStream(`${title}.mp4`));
-                        stream.on('finish', () => console.log(`Finish downloading '${title}'`));
+                        stream.on('finish', () => console.log(`Finished downloading '${title}'`));
                     } catch (e) {
                         console.log(`Unable to download '${title}'`)
                     }
