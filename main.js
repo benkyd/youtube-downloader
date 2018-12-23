@@ -5,7 +5,7 @@ require('electron-reload')(__dirname);
 function createWindow() {
     module.exports.window = new BrowserWindow({
         width: 1000, 
-        height: 800,
+        height: 600,
         isResizable: false,
         resizable: false
     });
