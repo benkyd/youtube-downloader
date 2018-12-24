@@ -37,8 +37,9 @@ module.exports.listen = async () => {
         });
 
         socket.on('download', async (data) => {
-            logger.log(`Socket id ${socket.id}' is requesting a download`);
-            youtube.downloadVideos(data, socket, {path: main.config.downloadLocation});
+            logger.log(`Socket id '${socket.id}' is requesting a download`);
+            let toDownload = await youtube.resolveVideos(data);
+            youtube.downloadVideos(toDownload.data, socket, {path: main.config.downloadLocation});
         });
     });
 }

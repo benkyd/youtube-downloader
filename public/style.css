@@ -30,7 +30,12 @@ textarea {
     height: 100px;
 }
 
-#VideoPreview {
+.VideoContainer {
+    padding: 30px, 0px, 30px, 0px;
+}
+
+#VideoBox {
+    padding-top: 10px;
     font-weight: lighter;
 }
 
