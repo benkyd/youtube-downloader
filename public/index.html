@@ -6,10 +6,11 @@
         <title>Page Title</title>
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="stylesheet" type="text/css" media="screen" href="style.css" />
+        <script src="/socket.io/socket.io.js"></script>
     </head>
     <body>
         <div id="Instructions">
-            <h1 id="CurrentDirectory">Currently saving videos to: <code>~/Desktop</code></h1>
+            <h1 id="CurrentDirectory">Currently saving videos to: <code id="saveloc">./</code></h1>
             
             Videos to record (seperate different videos by new lines):
         </div>
@@ -18,7 +19,10 @@
             <textarea id="VideosToRecord"></textarea>
         </div>
 
-        <!-- <button id="ChangeDirectory" type="button">Video save location</button> -->
+        <button id="Download">Download</button>
+
+        <div id="VideoPreview"></div>
+
         <script src="index.js"></script>
     </body>
 </html>

@@ -29,3 +29,11 @@ textarea {
     width: 400px;
     height: 100px;
 }
+
+#VideoPreview {
+    font-weight: lighter;
+}
+
+h {
+    font-weight: 400;
+}
