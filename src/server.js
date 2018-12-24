@@ -1,3 +1,5 @@
+const express = require('express');
+
 let app;
 let http;
 let io;
@@ -7,17 +9,14 @@ module.exports.init = async () => {
     http = require('http').Server(app);
     io = require('socket.io')(http);
     
-    http.listen(80, () => {
-        console.log('HTTP server listening on port 80');
-        console.log('Socket server listening');
+    http.listen(8080, () => {
+        console.log('HTTP server listening on port 8080');
+        console.log('WebSocket server listening');
     }); 
 }
 
 module.exports.listen = async () => {
-    app.use()
-    app.get('/', (req, res) => {
-        res.sendFile(__dirname + '/../public/index.html');
-    });
+    app.use(express.static('public'));
 }
 
 module.exports.app = app;
