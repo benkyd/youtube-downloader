@@ -37,7 +37,7 @@ module.exports.downloadVideos = async (arr, socket, options) => {
     for (const [key, value] of Object.entries(arr)) {
         if (ytdl.validateURL(key)) {
             try {
-                const stream = await ytdl(key, {quality: 'highest'});
+                const stream = await ytdl(key, {quality: 'highest', filter: (format) => format.container === 'mp4'});
                 stream.pipe(fs.createWriteStream(`${path}/${value.title}.mp4`));
 
                 stream.on('response', (res) => {

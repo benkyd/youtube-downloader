@@ -1,7 +1,7 @@
 const server = require('./server');
 
 let config =  {
-    serverPort: 8080,
+    serverPort: 80,
     downloadLocation: './'
 };
 
