@@ -38,7 +38,7 @@ module.exports.downloadVideos = async (arr, socket, options) => {
         if (ytdl.validateURL(key)) {
             try {
                 const stream = await ytdl(key, {quality: 'highest', filter: (format) => format.container === 'mp4'});
-                stream.pipe(fs.createWriteStream(`${path}/${value.title}.mp4`));
+                stream.pipe(fs.createWriteStream(`${path}/${(value.title).replace(/\//, '-')}.mp4`));
 
                 stream.on('response', (res) => {
                     let totalSize = res.headers['content-length'];
