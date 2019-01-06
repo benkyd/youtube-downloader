@@ -68,3 +68,12 @@ module.exports.downloadVideos = async (arr, socket, options) => {
     }
     socket.emit('download-count', {num: numOfDownloads});
 }
+
+module.exports.downloadAudio = async (arr, socket, options) => {
+    let path = options.path ? options.path : './'
+    let numOfDownloads = 0;
+
+    for (const [key, value] of Object.entries(arr)) {
+        
+    }
+}

@@ -55,7 +55,10 @@ socket.on('video-preview', async (data) => {
 
 document.getElementById('Download').addEventListener('click', async (event) => {
     if (isDownloading) return;
-    socket.emit('download', document.getElementById('VideosToRecord').value.split('\n'));
+    socket.emit('download', { 
+        videos: document.getElementById('VideosToRecord').value.split('\n'),
+        audioOnly: document.getElementById('AudioOnly').checked
+    });
     document.getElementById('VideoBox').innerText = 'Downloading...';
     // document.getElementById('VideosToRecord').value = null;
     isDownloading = true;

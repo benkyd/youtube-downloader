@@ -31,15 +31,18 @@ module.exports.listen = async () => {
             if (data.ExpectPreview) {
                 logger.log(`Socket id '${socket.id}' is requesting a video preview`);
                 let response = await youtube.resolveVideos(data.VideosToDownload);
-                socket.emit('video-preview', response);         
+                socket.emit('video-preview', response);
                 logger.log(`Finished preview for socket id '${socket.id}'`);       
             }
         });
 
         socket.on('download', async (data) => {
             logger.log(`Socket id '${socket.id}' is requesting a download`);
-            let toDownload = await youtube.resolveVideos(data);
-            youtube.downloadVideos(toDownload.data, socket, {path: main.config.downloadLocation});
+            let toDownload = await youtube.resolveVideos(data.videos);
+            if (data.audioOnly)
+                youtube.downloadAudio(toDownload.data, socket, {path: main.config.downloadLocation});
+            else   
+                youtube.downloadVideos(toDownload.data, socket, {path: main.config.downloadLocation});
         });
     });
 }
