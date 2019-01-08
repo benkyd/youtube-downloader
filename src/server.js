@@ -39,10 +39,7 @@ module.exports.listen = async () => {
         socket.on('download', async (data) => {
             logger.log(`Socket id '${socket.id}' is requesting a download`);
             let toDownload = await youtube.resolveVideos(data.videos);
-            if (data.audioOnly)
-                youtube.downloadAudio(toDownload.data, socket, {path: main.config.downloadLocation});
-            else   
-                youtube.downloadVideos(toDownload.data, socket, {path: main.config.downloadLocation});
+            youtube.setupDownloadQueue(toDownload.data, socket, {path: main.config.downloadLocation, audioOnly: !data.audioOnly});
         });
     });
 }

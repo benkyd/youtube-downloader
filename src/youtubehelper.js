@@ -8,72 +8,104 @@ module.exports.resolveVideos = async (arr) => {
 
     for (let video of arr) {
         if (video == '' || video == ' ') continue;
-        if (await ytdl.validateURL(video)) {
-            const info = await ytdl.getBasicInfo(video);
-            if (!info) {
+        try {
+            if (await ytdl.validateURL(video)) {
+                const info = await ytdl.getBasicInfo(video);
+                if (!info) {
+                    output.data[video] = {found: false};
+                    return;
+                }
+                output.data[video] = {
+                    found: true,
+                    title: info.title,
+                    thumbnail: info.thumbnail_url.replace('default', 'maxresdefault'),
+                    runtime: info.length_seconds
+                }
+                output.contents = true;
+            } else {
                 output.data[video] = {found: false};
-                return;
+                output.contents = true;
             }
-            output.data[video] = {
-                found: true,
-                title: info.title,
-                thumbnail: info.thumbnail_url.replace('default', 'maxresdefault'),
-                runtime: info.length_seconds
-            }
-            output.contents = true;
-        } else {
+        } catch (e) {
             output.data[video] = {found: false};
             output.contents = true;
+            logger.log(`Error resolving video ${video}`);
         }
     }
 
     return output;
 }
 
-module.exports.downloadVideos = async (arr, socket, options) => {
-    let path = options.path ? options.path : './'
-    let numOfDownloads = 0;
+let downloadQueue;
+
+module.exports.setupDownloadQueue = async (arr, socket, options) => {
+    let numOfDownloads;
+
+    downloadQueue[socket.id] = {
+        count: 0,
+        videos: { }
+    }
 
     for (const [key, value] of Object.entries(arr)) {
         if (ytdl.validateURL(key)) {
-            try {
-                const stream = await ytdl(key, {quality: 'highest', filter: (format) => format.container === 'mp4'});
-                stream.pipe(fs.createWriteStream(`${path}/${(value.title).replace(/\//, '-')}.mp4`));
 
-                stream.on('response', (res) => {
-                    let totalSize = res.headers['content-length'];
-                    let dataRead = 0;
-                    let lastPercent = 0;
-                    res.on('data', (data) => {
-                        dataRead += data.length;
-                        let percent = Math.floor((dataRead / totalSize) * 100) + '%';
-                        if (percent != lastPercent) {
-                            socket.emit('download-progress', {video: key, percent: percent, title: value.title});
-                        }
-                        lastPercent = percent;
-                    });
-                    res.on('end', () => {
-                        logger.log(`Socket id '${socket.id}' finished downloading ${value.title}`)
-                        socket.emit('download-done', {video: key, title: value.title});
-                    });
-                });
-        
-                logger.log(`Socket id '${socket.id}' is downloading ${value.title}`);
-            } catch (e) {
-                logger.log(`Socket id '${socket.id}' failed to download ${value.title}`);
-                socket.emit('download-done', {video: key, title: value.title});
-            }
             numOfDownloads++;
+            socket.emit('download-progress', {video: key, percent: "Queued", title: value.title});
         }
     }
+
     socket.emit('download-count', {num: numOfDownloads});
+    
+    for (const [key, value] of Object.entries(arr)) {
+        if (ytdl.validateURL(key)) {
+            await runQueueAsync(socket.id);
+            await download(key, value.title, socket, options.audioOnly);
+        }
+    }
 }
 
-module.exports.downloadAudio = async (arr, socket, options) => {
-    let path = options.path ? options.path : './'
-    let numOfDownloads = 0;
+async function runQueueAsync(socketID) {
 
-    for (const [key, value] of Object.entries(arr)) {
-        
-    }
+}
+
+async function download(video, videoName ,socket, audioOnly, path = './') {
+    return new Promise(async (resolve, reject) => {
+        let stream;
+
+        try {
+            if (audioOnly) {
+                stream = await ytdl(video, {quality: 'highest', filter: (format) => format.container === 'mp4'});
+                stream.pipe(fs.createWriteStream(`${path}/${(videoName).replace(/\//, '-')}.mp4`));
+            } else {
+                stream = await ytdl(video, {quality: 'highest', filter: "audioonly"});
+                stream.pipe(fs.createWriteStream(`${path}/${(videoName).replace(/\//, '-')}.mp3`));
+            }
+
+            stream.on('response', (res) => {
+                let totalSize = res.headers['content-length'];
+                let dataRead = 0;
+                let lastPercent = 0;
+                res.on('data', (data) => {
+                    dataRead += data.length;
+                    let percent = Math.floor((dataRead / totalSize) * 100) + '%';
+                    if (percent != lastPercent) {
+                        socket.emit('download-progress', {video: video, percent: percent, title: videoName});
+                    }
+                    lastPercent = percent;
+                });
+
+                res.on('end', () => {
+                    logger.log(`Socket id '${socket.id}' finished downloading ${videoName}`)
+                    socket.emit('download-done', {video: video, title: videoName});
+                    resolve('complete');
+                });
+
+                logger.log(`Socket id '${socket.id}' is downloading ${videoName}`);
+            });
+        } catch (e) {
+            logger.log(`Socket id '${socket.id}' failed to download ${videoName}: ${e}`);
+            socket.emit('download-done', {video: video, title: videoName});
+            resolve('error');
+        }
+    });
 }
