@@ -52,9 +52,8 @@ let downloadQueue = [];
 module.exports.setupDownloadQueue = async (arr, socket, options) => {
     let numOfDownloads;
 
-    for (const [key, value] of Object.entries(arr)) {
+    for (const [key, value] of Object.entries(arr))
         if (value.error) delete arr[key];
-    }
 
     downloadQueue[socket.id] = {
         count: 0,
@@ -80,7 +79,7 @@ module.exports.setupDownloadQueue = async (arr, socket, options) => {
 }
 
 async function runQueueAsync(socketID) {
-
+    // Ready for proper queueuing
 }
 
 async function download(video, videoName ,socket, audioOnly, path = './') {
