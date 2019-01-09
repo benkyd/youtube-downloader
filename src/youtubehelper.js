@@ -17,19 +17,30 @@ module.exports.resolveVideos = async (arr) => {
                 }
                 output.data[video] = {
                     found: true,
+                    error: false,
                     title: info.title,
                     thumbnail: info.thumbnail_url.replace('default', 'maxresdefault'),
                     runtime: info.length_seconds
                 }
                 output.contents = true;
             } else {
-                output.data[video] = {found: false};
+                output.data[video] = {found: false, error: true};
                 output.contents = true;
             }
         } catch (e) {
-            output.data[video] = {found: false};
-            output.contents = true;
-            logger.log(`Error resolving video ${video}: ${e}`);
+            if (!e.toString().includes('Error: This video contains content')) {
+                output.data[video] = {found: false};
+                output.contents = true;
+                logger.log(`Error resolving video ${video}: ${e}`);
+            } else {
+                output.data[video] = {
+                    found: true,
+                    error: true,
+                    title: 'Not found: This video is blocked in your country',
+                    thumbnail: 'ERRORED',
+                    runtime: 'NONE'
+                }
+            }
         }
     }
 
@@ -40,6 +51,10 @@ let downloadQueue = [];
 
 module.exports.setupDownloadQueue = async (arr, socket, options) => {
     let numOfDownloads;
+
+    for (const [key, value] of Object.entries(arr)) {
+        if (value.error) delete arr[key];
+    }
 
     downloadQueue[socket.id] = {
         count: 0,
