@@ -60,22 +60,21 @@ module.exports.setupDownloadQueue = async (arr, socket, options) => {
         videos: { }
     }
 
-    for (const [key, value] of Object.entries(arr)) {
-        if (ytdl.validateURL(key)) {
-
-            numOfDownloads++;
+    for (const [key, value] of Object.entries(arr))
+        if (ytdl.validateURL(key))
             socket.emit('download-progress', {video: key, percent: "Queued", title: value.title});
-        }
-    }
-
-    socket.emit('download-count', {num: numOfDownloads});
     
-    for (const [key, value] of Object.entries(arr)) {
-        if (ytdl.validateURL(key)) {
-            await runQueueAsync(socket.id);
-            await download(key, value.title, socket, options.audioOnly);
+    await new Promise(async (resolve, reject) => {
+        for (const [key, value] of Object.entries(arr)) {
+            if (ytdl.validateURL(key)) {
+                await runQueueAsync(socket.id);
+                await download(key, value.title, socket, options.audioOnly);
+            }
+            // if (arr.indexOf(key) == arr.length) {resolve();}
         }
-    }
+        resolve();
+    });
+    socket.emit('queue-concluded');
 }
 
 async function runQueueAsync(socketID) {

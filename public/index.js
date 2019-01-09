@@ -80,19 +80,19 @@ socket.on('download-count', async (data) => {
     downloadCount = data.num;
 });
 
-socket.on('download-done', async(data) => {
-    completedDownloads++;
-    
+socket.on('download-done', async(data) => {    
     downloads[data.video] = {title: data.title, percent: 'Complete!'};
     renderDownloads();
-    if (completedDownloads == downloadCount) {
-        completedDownloads = 0; downloadCount = 0;
-        isDownloading = false;
-        downloads = [];
-    }
 });
 
 socket.on('download-progress', async (data) => {
     downloads[data.video] = data;
     renderDownloads();
+});
+
+socket.on('queue-concluded', async (data) => {
+    completedDownloads = 0; downloadCount = 0;
+    isDownloading = false;
+    downloads = [];
+    document.getElementById('VideoBox').innerHTML += "<h>Queue Concluded...</h>";
 });
