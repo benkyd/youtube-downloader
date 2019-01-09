@@ -29,14 +29,14 @@ module.exports.resolveVideos = async (arr) => {
         } catch (e) {
             output.data[video] = {found: false};
             output.contents = true;
-            logger.log(`Error resolving video ${video}`);
+            logger.log(`Error resolving video ${video}: ${e}`);
         }
     }
 
     return output;
 }
 
-let downloadQueue;
+let downloadQueue = [];
 
 module.exports.setupDownloadQueue = async (arr, socket, options) => {
     let numOfDownloads;
@@ -71,7 +71,6 @@ async function runQueueAsync(socketID) {
 async function download(video, videoName ,socket, audioOnly, path = './') {
     return new Promise(async (resolve, reject) => {
         let stream;
-
         try {
             if (audioOnly) {
                 stream = await ytdl(video, {quality: 'highest', filter: (format) => format.container === 'mp4'});
@@ -105,6 +104,7 @@ async function download(video, videoName ,socket, audioOnly, path = './') {
         } catch (e) {
             logger.log(`Socket id '${socket.id}' failed to download ${videoName}: ${e}`);
             socket.emit('download-done', {video: video, title: videoName});
+            socket.emit('download-progress', {video: video, percent: "Failed", title: videoName});
             resolve('error');
         }
     });
