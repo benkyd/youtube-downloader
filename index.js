@@ -1,1 +1,1 @@
-require('./src/index').main();
+import('./src/index').main();

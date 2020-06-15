@@ -1,15 +1,19 @@
 {
-  "name": "youtube-dowloader",
+  "name": "youtube-downloader",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+  "main": "main.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/plane000/youtube-downloader.git"
   },
   "author": "Ben (plane000)",
   "license": "MIT",
+  "devDependencies": {},
   "dependencies": {
-    "fs": "0.0.1-security",
-    "ytdl-core": "^0.21.1"
+    "express": "^4.16.4",
+    "moment": "^2.23.0",
+    "socket.io": "^2.2.0",
+    "ytdl-core": "^0.28.3"
   }
 }

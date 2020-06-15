@@ -1,19 +1,22 @@
 {
   "name": "youtube-downloader",
   "version": "1.0.0",
-  "description": "",
-  "main": "main.js",
+  "description": "Simple to use youtube downloader, simply run the index javascript file with node and then go to localhost on your browser, by default the video will download to this folder but can be changed in src/index.js",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/plane000/youtube-downloader.git"
   },
-  "author": "Ben (plane000)",
+  "author": "Ben (benjaminkyd@gmail.com)",
   "license": "MIT",
-  "devDependencies": {},
+  "bugs": {
+    "url": "https://github.com/plane000/youtube-downloader/issues"
+  },
+  "homepage": "https://github.com/plane000/youtube-downloader#readme",
   "dependencies": {
-    "express": "^4.16.4",
-    "moment": "^2.23.0",
-    "socket.io": "^2.2.0",
-    "ytdl-core": "^0.28.3"
+    "moment": "^2.26.0"
   }
 }
