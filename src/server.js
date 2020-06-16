@@ -25,7 +25,22 @@ module.exports.Listen = async () =>
 
     io.on('connection', async (socket) => {
         Logger.Log(`New socket connection from ip: ${socket.handshake.address}, unique id: ${socket.id}`);
+
+        SocketHandler(socket);
+
     });
+}
+
+function SocketHandler(socket) 
+{
+    socket.on('VideoListUpdate', (req) => VideoListUpdate(socket, req) );
+}
+
+async function VideoListUpdate(socket, req)
+{
+    
+
+    socket.emit('VideoListResolution', req.Content);
 }
 
 module.exports.App = app;
