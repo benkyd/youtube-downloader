@@ -1,3 +1,4 @@
+const Logger = require('./logger')
 const Config = require('./config');
 
 const express = require('express');
@@ -6,24 +7,24 @@ let app;
 let http;
 let io;
 
-module.exports.Init = async () => {
+module.exports.Init = async () => 
+{
     app = require('express')();
     http = require('http').Server(app);
     io = require('socket.io')(http);
-    
-    http.listen(main.config.serverPort, () => {
-        logger.log(`HTTP server listening on port ${main.config.serverPort}`);
-        logger.log(`WebSocket server listening on ${main.config.serverPort}`);
-    }); 
 }
 
-module.exports.listen = async () => {
-    app.use(express.static('public'));
+module.exports.Listen = async () => 
+{
+    http.listen(Config.Configuration.ListenPort, () => {
+        Logger.Log(`HTTP server listening on port ${Config.Configuration.ListenPort}`);
+        Logger.Log(`WebSocket server listening on ${Config.Configuration.ListenPort}`);
+    }); 
+
+    app.use(express.static(Config.Configuration.PublicDirectory));
 
     io.on('connection', async (socket) => {
-        logger.log(`New socket connection from id: ${socket.id}`);
-
-
+        Logger.Log(`New socket connection from ip: ${socket.handshake.address}, unique id: ${socket.id}`);
     });
 }
 

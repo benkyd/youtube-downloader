@@ -1,1 +1,1 @@
-import('./src/index').main();
+require('./src/index').Main();
