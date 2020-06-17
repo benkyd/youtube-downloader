@@ -38,9 +38,63 @@ function SocketHandler(socket)
 
 async function VideoListUpdate(socket, req)
 {
+    // req format
+    // { 
+    //     ExptectPreview: bool,
+    //     Content: [arr]
+    // }
+
+    let Res = {};
+
+    // res format
+    // errors not present if error is false
+    // content not present if error is true
+    // {
+    //     Error: bool,
+    //     Errors: [err],
+    //     Content: {
+    //         id: int,
+    //         url: string,
+    //         valid: bool,
+    //         action: string
+    //     }
+    // }
+
+    if (!req || !req.Content)
+    {
+        Res.Error = true;
+        Res.Errors = ErorrsBuilder("Content Error", "No content in request");
+        socket.emit('VideoListResolution', Res);
+        return;
+    }
     
 
-    socket.emit('VideoListResolution', req.Content);
+    
+    const VideoArray = req.Content;
+    
+
+    socket.emit('VideoListResolution', );
+}
+
+
+function ErorrsBuilder(...errors)
+{
+    // errors format 
+    // Errors: [{
+    //     type: string,
+    //     content: string
+    // }],
+    let ret = [];
+    let j = 0;
+    for (let i = 0; i < errors.length; i += 2)
+    {
+        ret[j] = {
+            type: errors[i],
+            content: errors[i+1]
+        };
+        j++;
+    }
+    return ret;
 }
 
 module.exports.App = app;
