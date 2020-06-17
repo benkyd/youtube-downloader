@@ -100,6 +100,8 @@ async function VideoListUpdate(socket, req)
 
     socket.emit('VideoListResolution', Res);
 
+    
+
 }
 
 

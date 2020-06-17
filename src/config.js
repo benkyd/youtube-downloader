@@ -7,6 +7,7 @@ module.exports.Load = () =>
         LogFile: 'logs.log',
         ListenPort: 8080,
         PublicDirectory: 'public',
-        StorageDirectory: './tmp/'
+        StorageDirectory: './tmp/',
+        CacheCleanInterval: 2
     }
 }
