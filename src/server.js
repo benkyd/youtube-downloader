@@ -70,9 +70,36 @@ async function VideoListUpdate(socket, req)
 
     const VideoArray = req.Content;
 
-    
+    const YoutubeRegex = /^((?:https?:)?\/\/)?((?:www|m)\.)?((?:youtube\.com|youtu.be))(\/(?:[\w\-]+\?v=|embed\/|v\/)?)([\w\-]+)(\S+)?$/;
 
-    socket.emit('VideoListResolution', );
+    let ResolveQueue = [];
+
+    Res.Content = [];
+    for (video of VideoArray)
+    {
+        if (YoutubeRegex.exec(video))
+        {
+            // generate ID lol
+            ResolveQueue.push(video);
+            Res.Content.push({
+                id: 1,
+                url: video,
+                valid: true,
+                action: 'Resolving'
+            });
+        } else 
+        {
+            Res.Content.push({
+                id: 1,
+                url: null,
+                valid: false,
+                action: 'error'
+            });
+        }
+    }
+
+    socket.emit('VideoListResolution', Res);
+
 }
 
 
