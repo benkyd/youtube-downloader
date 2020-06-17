@@ -52,12 +52,12 @@ async function VideoListUpdate(socket, req)
     // {
     //     Error: bool,
     //     Errors: [err],
-    //     Content: {
+    //     Content: [{
     //         id: int,
     //         url: string,
     //         valid: bool,
     //         action: string
-    //     }
+    //     }]
     // }
 
     if (!req || !req.Content)
@@ -67,10 +67,9 @@ async function VideoListUpdate(socket, req)
         socket.emit('VideoListResolution', Res);
         return;
     }
-    
 
-    
     const VideoArray = req.Content;
+
     
 
     socket.emit('VideoListResolution', );
