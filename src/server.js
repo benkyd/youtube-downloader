@@ -1,6 +1,9 @@
 const Logger = require('./logger')
 const Config = require('./config');
 
+const YoutubeHelper = require('./youtubehelper');
+const YoutubeDownloader = require('./youtubedownloader');
+
 const express = require('express');
 
 let app;
@@ -73,16 +76,18 @@ async function VideoListUpdate(socket, req)
     const YoutubeRegex = /^((?:https?:)?\/\/)?((?:www|m)\.)?((?:youtube\.com|youtu.be))(\/(?:[\w\-]+\?v=|embed\/|v\/)?)([\w\-]+)(\S+)?$/;
 
     let ResolveQueue = [];
-
+    
+    Res.Error = false;
     Res.Content = [];
     for (video of VideoArray)
     {
         if (YoutubeRegex.exec(video))
         {
+            let VideoID = video.match(YoutubeRegex)[5];
             // generate ID lol
-            ResolveQueue.push(video);
+            ResolveQueue.push(VideoID);
             Res.Content.push({
-                id: 1,
+                id: VideoID,
                 url: video,
                 valid: true,
                 action: 'Resolving'
@@ -100,7 +105,17 @@ async function VideoListUpdate(socket, req)
 
     socket.emit('VideoListResolution', Res);
 
-    
+    if (ResolveQueue.length == 0)
+        return;
+
+    const Resolution = await YoutubeHelper.GetVideoInfoArr(ResolveQueue);
+
+    const ResolutionRes = {
+        Error: false,
+        Content: Resolution
+    };
+
+    socket.emit('VideoListResolved', ResolutionRes);
 
 }
 

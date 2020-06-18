@@ -19,4 +19,4 @@ VideoInput.oninput = () =>
 
 Socket.on('VideoListResolution', (req) => console.log(req));
 
-Socket.on('VideoListResolved')
+Socket.on('VideoListResolved', (req) => console.log(req));
