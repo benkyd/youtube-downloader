@@ -87,7 +87,7 @@ module.exports.GetVideoInfo = async (video) =>
         } else 
         {
             // TODO: is the YouTube API faster for this?
-            Logger.Log(`Resolving '${video}'`)
+            Logger.Log(`Resolving '${video}'`);
             Video = await YTDL.getInfo(video);
             // register the info into the cache
             RegisterCache(Video);
@@ -100,7 +100,11 @@ module.exports.GetVideoInfo = async (video) =>
     } catch (e)
     {
         Logger.Log(`Error resolving video '${video}', ${e}`);
-        return { Error: "Video cannot resolve" };
+        return { 
+            id: video,
+            Error: true, 
+            Errors: [ "Video cannot resolve" ]
+        };
     }
 }
 

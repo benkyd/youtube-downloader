@@ -5,7 +5,7 @@ let Socket = io();
     console.log('Starting up');
 })();
 
-const VideoInput = document.getElementById("VideosToRecord");
+const VideoInput = document.getElementById('VideosToRecord');
 
 VideoInput.oninput = () => 
 {
@@ -17,6 +17,15 @@ VideoInput.oninput = () =>
     Socket.emit('VideoListUpdate', ToSend);
 };
 
-Socket.on('VideoListResolution', (req) => console.log(req));
+Socket.on('VideoListResolution', (res) => 
+{
+    if (res.Error === true) return;
+    ResolvedBasic(res.Content);
+});
 
-Socket.on('VideoListResolved', (req) => console.log(req));
+Socket.on('VideoListResolved', (res) =>
+{
+    console.log(res);
+    if (res.Error === true) return;
+    ResolvedVideos(res.Content);
+});

@@ -81,6 +81,7 @@ async function VideoListUpdate(socket, req)
     Res.Content = [];
     for (video of VideoArray)
     {
+        video = video.trim()
         if (YoutubeRegex.exec(video))
         {
             let VideoID = video.match(YoutubeRegex)[5];
@@ -95,10 +96,10 @@ async function VideoListUpdate(socket, req)
         } else 
         {
             Res.Content.push({
-                id: 1,
-                url: null,
+                id: -1, // -1 means not resolved
+                url: video, // used as ID on the client
                 valid: false,
-                action: 'error'
+                action: 'Error'
             });
         }
     }
