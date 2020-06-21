@@ -5,6 +5,11 @@ let Socket = io();
     console.log('Starting up');
 })();
 
+function DownloadButtonPressed(format, id)
+{
+    alert(`${format} ${id}`);
+}
+
 const VideoInput = document.getElementById('VideosToRecord');
 
 VideoInput.oninput = () => 

@@ -34,19 +34,42 @@ h {
     font-weight: 400;
 }
 
-#VideoContainer {
-    padding: 30px, 0px, 30px, 0px;
+.table {
+    width: 60%;
 }
 
-#VideoBox {
-    padding-top: 10px;
-    font-weight: lighter;
+.thumbnail {
+    max-width: 150%;
+    height: auto;
 }
 
-#Updater {
-    position: absolute;
-    top: 5px;
-    right: 10px;}
+.videotitle {
+    font-size: 1rem;
+}
+
+.channel {
+    font-size: 0.9rem;
+}
+
+.views {
+    font-size: 0.9rem;
+}
+
+.desc {
+    font-size: 0.8rem;
+    display: inline-block;
+    text-overflow: ellipsis;
+    word-wrap: break-word;
+    overflow: hidden;
+    line-height: 1.2em;
+    max-height: 2.4em;
+    font-style: italic;
+}
+
+.downloadbuttons {
+    font-size: 0.8rem;
+    
+}
 
 #copyright {
     position: absolute;

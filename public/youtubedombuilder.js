@@ -43,20 +43,32 @@ function ResolvedBasic(BasicResolution)
 
 function VideoElement(id, title, desc, views, thumbnail, channel, runtime)
 {
-    // assumes the div has already been created
+    
+    
+    // format views so theres commas
+    // in it ennit - Will is a stupid
+    // "Fuck you, of course it's a string" - b_boy_ww 2020
+    views = parseInt(views);
+    views = views.toLocaleString('en-US');
+
     return `
-        <table>
+        <table class="table">
         <tr>
-            <td rowspan="3"><a href="https://www.youtube.com/watch?v=${id}"><img src="${thumbnail}"></a></td>
-            <td colspan="3">${title}</td>
+            <td rowspan="4" class="thumbnail"><a href="https://www.youtube.com/watch?v=${id}"><img src="${thumbnail}"></a></td>
+            <td colspan="4" class="videotitle">${title}</td>
         </tr>
         <tr>
-            <td>${channel}</td>
-            <td>${views}</td>
-            <td>${runtime}</td>
+            <td class="channel">${channel}</td>
+            <td class="views">${views} views</td>
+            <td></td>
+            <td></td>
         </tr>
         <tr>
-            <td colspan="3">${desc}</td>
+            <td colspan="4" class="desc">${desc}</td>
+        </tr>
+        <tr>
+            <td colspan="2" class="downloadbuttons"><button onclick="DownloadButtonPressed('MP4(MAX)', ${id})">Download Video</button> </td>
+            <td colspan="2" class="downloadbuttons"><button onclick="DownloadButtonPressed('MP3(MAX)', ${id})">Download Audio</button> </td>
         </tr>
         </table>
     `;
